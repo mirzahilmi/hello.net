@@ -1,10 +1,10 @@
 namespace hello.net.Controllers;
-
 using hello.net.Data;
 using hello.net.Models;
 using hello.net.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 [ApiController]
 [Route("/api/articles")]
