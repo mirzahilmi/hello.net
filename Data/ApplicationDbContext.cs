@@ -1,4 +1,4 @@
-using hello.net.Models.Entity;
+using hello.net.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace hello.net.Data
