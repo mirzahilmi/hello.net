@@ -8,7 +8,8 @@ namespace hello.net.Controllers
 {
     [ApiController]
     [Route("/api/articles")]
-    public class ArticleController(ApplicationDbContext context) : ControllerBase
+    public class ArticleController(ApplicationDbContext context)
+        : ControllerBase
     {
         private readonly ApplicationDbContext _context = context;
 
@@ -30,7 +31,9 @@ namespace hello.net.Controllers
 
         [HttpPost]
         [ProducesResponseType<Article>(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Article>> PostArticle(ArticleCreateRequestModel article)
+        public async Task<ActionResult<Article>> PostArticle(
+            ArticleCreateRequestModel article
+        )
         {
             var _article = new Article
             {
@@ -41,13 +44,20 @@ namespace hello.net.Controllers
             };
             _context.Articles.Add(_article);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetArticle), new { id = _article.ID }, _article);
+            return CreatedAtAction(
+                nameof(GetArticle),
+                new { id = _article.ID },
+                _article
+            );
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutArticle(ulong id, ArticleUpdateRequestModel article)
+        public async Task<IActionResult> PutArticle(
+            ulong id,
+            ArticleUpdateRequestModel article
+        )
         {
             var _article = await _context.Articles.FindAsync(id);
             if (_article == null)
