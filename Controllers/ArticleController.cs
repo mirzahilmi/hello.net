@@ -8,10 +8,13 @@ namespace hello.net.Controllers
 {
     [ApiController]
     [Route("/api/articles")]
-    public class ArticleController(ApplicationDbContext context)
-        : ControllerBase
+    public class ArticleController(
+        ApplicationDbContext context,
+        ILogger<ArticleController> logger
+    ) : ControllerBase
     {
         private readonly ApplicationDbContext _context = context;
+        private readonly ILogger<ArticleController> _logger = logger;
 
         [HttpGet]
         [ProducesResponseType<IEnumerable<Article>>(StatusCodes.Status200OK)]
@@ -44,6 +47,9 @@ namespace hello.net.Controllers
             };
             _context.Articles.Add(_article);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Article {Article} created", _article.Title);
+
             return CreatedAtAction(
                 nameof(GetArticle),
                 new { id = _article.ID },
@@ -69,6 +75,8 @@ namespace hello.net.Controllers
             _article.PublishedAt = article.PublishedAt;
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("Article {Article} updated", _article.Title);
+
             return NoContent();
         }
 
@@ -83,6 +91,8 @@ namespace hello.net.Controllers
 
             _context.Articles.Remove(article);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Article {Article} deleted", article.Title);
 
             return NoContent();
         }

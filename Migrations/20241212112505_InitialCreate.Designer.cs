@@ -12,7 +12,7 @@ using hello.net.Data;
 namespace hello.net.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241210113649_InitialCreate")]
+    [Migration("20241212112505_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,11 +25,13 @@ namespace hello.net.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("hello.net.Models.Entity.Article", b =>
+            modelBuilder.Entity("hello.net.Models.Entities.Article", b =>
                 {
-                    b.Property<decimal>("ID")
+                    b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("numeric(20,0)");
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
 
                     b.Property<string>("Content")
                         .IsRequired()

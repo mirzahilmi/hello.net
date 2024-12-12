@@ -6,8 +6,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PrimaryDatabase"))
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("PrimaryDatabase")
+    )
 );
+builder.Logging.AddJsonConsole();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
