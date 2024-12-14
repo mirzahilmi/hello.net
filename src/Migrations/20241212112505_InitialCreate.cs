@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace hello.net.Migrations
+namespace Hello.NET.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

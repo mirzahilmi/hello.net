@@ -1,4 +1,4 @@
-using hello.net.Data;
+using Hello.NET.Data;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;

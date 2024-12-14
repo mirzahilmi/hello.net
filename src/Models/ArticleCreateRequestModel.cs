@@ -1,6 +1,6 @@
-namespace hello.net.Models;
+namespace Hello.NET.Models;
 
-public class ArticleUpdateRequestModel
+public class ArticleCreateRequestModel
 {
     public required string Title { get; set; }
     public required string Slug { get; set; }

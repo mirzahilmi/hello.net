@@ -1,4 +1,4 @@
-namespace hello.net.Models.Entities;
+namespace Hello.NET.Models.Entities;
 
 using System.ComponentModel.DataAnnotations;
 

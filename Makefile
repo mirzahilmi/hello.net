@@ -1,2 +1,2 @@
 devserver:
-	@DOTNET_ENVIRONMENT=Development dotnet watch run
+	@DOTNET_ENVIRONMENT=Development dotnet watch run --project src/

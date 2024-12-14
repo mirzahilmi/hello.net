@@ -2,21 +2,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using hello.net.Data;
+using Hello.NET.Data;
 
 #nullable disable
 
-namespace hello.net.Migrations
+namespace Hello.NET.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241212112505_InitialCreate")]
-    partial class InitialCreate
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +22,7 @@ namespace hello.net.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("hello.net.Models.Entities.Article", b =>
+            modelBuilder.Entity("Hello.NET.Models.Entities.Article", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()

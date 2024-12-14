@@ -1,6 +1,6 @@
-namespace hello.net.Data;
+namespace Hello.NET.Data;
 
-using hello.net.Models.Entities;
+using Hello.NET.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 public class ApplicationDbContext : DbContext
