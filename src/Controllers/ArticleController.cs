@@ -1,10 +1,10 @@
 namespace Hello.NET.Controllers;
+
 using Hello.NET.Data;
 using Hello.NET.Models;
 using Hello.NET.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 
 [ApiController]
 [Route("/api/articles")]
@@ -24,7 +24,7 @@ public class ArticleController(
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType<Article>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Article>> GetArticle(ulong id)
+    public async Task<ActionResult<Article>> GetArticle([FromRoute] ulong id)
     {
         var article = await _context.Articles.FindAsync(id);
         if (article == null)
@@ -35,7 +35,7 @@ public class ArticleController(
     [HttpPost]
     [ProducesResponseType<Article>(StatusCodes.Status201Created)]
     public async Task<ActionResult<Article>> PostArticle(
-        ArticleCreateRequestModel article
+        [FromBody] ArticleCreateRequestModel article
     )
     {
         var _article = new Article
@@ -61,8 +61,8 @@ public class ArticleController(
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> PutArticle(
-        ulong id,
-        ArticleUpdateRequestModel article
+        [FromRoute] ulong id,
+        [FromBody] ArticleUpdateRequestModel article
     )
     {
         var _article = await _context.Articles.FindAsync(id);
@@ -83,7 +83,7 @@ public class ArticleController(
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteArticle(ulong id)
+    public async Task<IActionResult> DeleteArticle([FromRoute] ulong id)
     {
         var article = await _context.Articles.FindAsync(id);
         if (article == null)
