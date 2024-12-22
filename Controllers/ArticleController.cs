@@ -1,5 +1,6 @@
 namespace Hello.NET.Controllers;
 
+using FluentValidation;
 using Hello.NET.Data;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Mapping.Interfaces;
@@ -11,12 +12,13 @@ using Microsoft.EntityFrameworkCore;
 [Route("/api/articles")]
 public class ArticleController(
     ApplicationDbContext context,
-    Logger<ArticleController> logger,
-    IArticleDtoMapper mapper
+    IArticleDtoMapper mapper,
+    IValidator<ArticleDto> validator
 ) : ControllerBase
 {
     private readonly ApplicationDbContext _context = context;
-    private readonly ILogger<ArticleController> _logger = logger;
+    private readonly IArticleDtoMapper _mapper = mapper;
+    private readonly IValidator<ArticleDto> _validator = validator;
 
     [HttpGet]
     [ProducesResponseType<IEnumerable<Article>>(StatusCodes.Status200OK)]
@@ -40,14 +42,16 @@ public class ArticleController(
         [FromBody] ArticleDto article
     )
     {
-        var _article = mapper.Map(article);
+        var result = _validator.Validate(article);
+        if (!result.IsValid)
+            return UnprocessableEntity();
+
+        var _article = _mapper.Map(article);
         if (_article == null)
             return BadRequest();
 
         _context.Articles.Add(_article);
         await _context.SaveChangesAsync();
-
-        _logger.LogInformation("Article {Article} created", _article.Title);
 
         return CreatedAtAction(
             nameof(GetArticle),
@@ -74,8 +78,6 @@ public class ArticleController(
         _article.PublishedAt = article.PublishedAt;
         await _context.SaveChangesAsync();
 
-        _logger.LogInformation("Article {Article} updated", _article.Title);
-
         return NoContent();
     }
 
@@ -90,8 +92,6 @@ public class ArticleController(
 
         _context.Articles.Remove(article);
         await _context.SaveChangesAsync();
-
-        _logger.LogInformation("Article {Article} deleted", article.Title);
 
         return NoContent();
     }
