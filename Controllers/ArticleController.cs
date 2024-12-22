@@ -1,8 +1,9 @@
 namespace Hello.NET.Controllers;
 
 using Hello.NET.Data;
+using Hello.NET.Domain.DTOs;
+using Hello.NET.Mapping.Interfaces;
 using Hello.NET.Models;
-using Hello.NET.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,8 @@ using Microsoft.EntityFrameworkCore;
 [Route("/api/articles")]
 public class ArticleController(
     ApplicationDbContext context,
-    ILogger<ArticleController> logger
+    Logger<ArticleController> logger,
+    IArticleDtoMapper mapper
 ) : ControllerBase
 {
     private readonly ApplicationDbContext _context = context;
@@ -35,16 +37,13 @@ public class ArticleController(
     [HttpPost]
     [ProducesResponseType<Article>(StatusCodes.Status201Created)]
     public async Task<ActionResult<Article>> PostArticle(
-        [FromBody] ArticleCreateRequestModel article
+        [FromBody] ArticleDto article
     )
     {
-        var _article = new Article
-        {
-            Title = article.Title,
-            Slug = article.Slug,
-            Content = article.Content,
-            PublishedAt = article.PublishedAt,
-        };
+        var _article = mapper.Map(article);
+        if (_article == null)
+            return BadRequest();
+
         _context.Articles.Add(_article);
         await _context.SaveChangesAsync();
 
@@ -62,7 +61,7 @@ public class ArticleController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> PutArticle(
         [FromRoute] ulong id,
-        [FromBody] ArticleUpdateRequestModel article
+        [FromBody] ArticleDto article
     )
     {
         var _article = await _context.Articles.FindAsync(id);
