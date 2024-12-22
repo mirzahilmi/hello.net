@@ -1,4 +1,7 @@
 using Hello.NET.Data;
+using Hello.NET.Mapping;
+using Hello.NET.Mapping.Interfaces;
+using Hello.NET.Options;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hello.NET.Extensions;
@@ -17,5 +20,7 @@ public static class Extensions
                 builder.Configuration.GetConnectionString("PrimaryDatabase")
             )
         );
+        builder.Services.ConfigureOptions<OpenTelemetryOptionsSetup>();
+        builder.Services.AddScoped<IArticleDtoMapper, ArticleDtoMapper>();
     }
 }
