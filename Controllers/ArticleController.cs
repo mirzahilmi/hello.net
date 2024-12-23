@@ -21,13 +21,13 @@ public class ArticleController(
     private readonly IValidator<ArticleDto> _validator = validator;
 
     [HttpGet]
-    [ProducesResponseType<IEnumerable<Article>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Article>>> GetArticles() =>
         await _context.Articles.ToListAsync();
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType<Article>(StatusCodes.Status200OK)]
     public async Task<ActionResult<Article>> GetArticle([FromRoute] ulong id)
     {
         var article = await _context.Articles.FindAsync(id);
@@ -37,14 +37,16 @@ public class ArticleController(
     }
 
     [HttpPost]
-    [ProducesResponseType<Article>(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Article>> PostArticle(
         [FromBody] ArticleDto article
     )
     {
-        var result = _validator.Validate(article);
+        var result = await _validator.ValidateAsync(article);
         if (!result.IsValid)
-            return UnprocessableEntity();
+            return ValidationProblem(
+                new ValidationProblemDetails(result.ToDictionary())
+            );
 
         var _article = _mapper.Map(article);
         if (_article == null)
