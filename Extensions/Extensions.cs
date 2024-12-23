@@ -1,5 +1,6 @@
 using FluentValidation;
 using Hello.NET.Data;
+using Hello.NET.Domain.Services;
 using Hello.NET.Mapping;
 using Hello.NET.Mapping.Interfaces;
 using Hello.NET.Options;
@@ -24,5 +25,6 @@ public static class Extensions
         builder.Services.ConfigureOptions<OpenTelemetryOptionsSetup>();
         builder.Services.AddScoped<IArticleDtoMapper, ArticleDtoMapper>();
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+        builder.Services.AddScoped<IArticleService, ArticleService>();
     }
 }
