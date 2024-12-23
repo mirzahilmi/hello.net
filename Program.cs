@@ -7,6 +7,7 @@ builder.AddApplicationServices();
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("AllowAll");
     app.UseSwagger(options =>
     {
         options.RouteTemplate = "/openapi/{documentName}.json";

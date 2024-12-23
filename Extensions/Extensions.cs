@@ -26,5 +26,14 @@ public static class Extensions
         builder.Services.AddScoped<IArticleMapper, ArticleMapper>();
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         builder.Services.AddScoped<IArticleService, ArticleService>();
+        builder.Services.AddCors(options =>
+            options.AddPolicy(
+                "AllowAll",
+                _builder =>
+                {
+                    _builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                }
+            )
+        );
     }
 }
