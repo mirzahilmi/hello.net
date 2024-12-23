@@ -23,7 +23,7 @@ public static class Extensions
             )
         );
         builder.Services.ConfigureOptions<OpenTelemetryOptionsSetup>();
-        builder.Services.AddScoped<IArticleDtoMapper, ArticleDtoMapper>();
+        builder.Services.AddScoped<IArticleMapper, ArticleMapper>();
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         builder.Services.AddScoped<IArticleService, ArticleService>();
     }

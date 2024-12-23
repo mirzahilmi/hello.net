@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 [Route("/api/articles")]
 public class ArticleController(
     IArticleService service,
-    IArticleDtoMapper mapper,
+    IArticleMapper mapper,
     IValidator<ArticleDto> validator
 ) : ControllerBase
 {
     private readonly IArticleService _service = service;
-    private readonly IArticleDtoMapper _mapper = mapper;
+    private readonly IArticleMapper _mapper = mapper;
     private readonly IValidator<ArticleDto> _validator = validator;
 
     [HttpGet]
