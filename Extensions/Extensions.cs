@@ -21,8 +21,8 @@ public static class Extensions
             )
         );
         builder.Services.ConfigureOptions<OpenTelemetryOptionsSetup>();
-        builder.Services.AddScoped<IArticleMapper, ArticleMapper>();
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+        builder.Services.AddScoped<IArticleMapper, ArticleMapper>();
         builder.Services.AddScoped<IArticleService, ArticleService>();
         builder.Services.AddCors(options =>
             options.AddPolicy(
@@ -33,6 +33,7 @@ public static class Extensions
                 }
             )
         );
+        builder.Services.AddResponseCaching();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

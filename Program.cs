@@ -14,5 +14,6 @@ if (app.Environment.IsDevelopment())
     });
     app.MapScalarApiReference();
 }
+app.UseResponseCaching();
 app.MapControllers();
 app.Run();
