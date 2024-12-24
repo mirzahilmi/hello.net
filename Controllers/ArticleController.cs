@@ -1,5 +1,6 @@
 namespace Hello.NET.Controllers;
 
+using Asp.Versioning;
 using FluentValidation;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Services;
@@ -7,8 +8,9 @@ using Hello.NET.Mapping.Interfaces;
 using Hello.NET.Models;
 using Microsoft.AspNetCore.Mvc;
 
+[ApiVersion(1.0)]
 [ApiController]
-[Route("/api/articles")]
+[Route("api/v{version:apiVersion}/articles")]
 public class ArticleController(
     IArticleService service,
     IArticleMapper mapper,
@@ -20,11 +22,13 @@ public class ArticleController(
     private readonly IValidator<ArticleDto> _validator = validator;
 
     [HttpGet]
+    [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<Article>>> GetArticles() =>
         await _service.GetArticlesAsync();
 
     [HttpGet("{id}")]
+    [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<Article>> GetArticle([FromRoute] long id)
@@ -37,6 +41,7 @@ public class ArticleController(
     }
 
     [HttpPost]
+    [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Article>> PostArticle(
         [FromBody] ArticleDto article
@@ -62,6 +67,7 @@ public class ArticleController(
     }
 
     [HttpPut("{id}")]
+    [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> PutArticle(
@@ -89,6 +95,7 @@ public class ArticleController(
     }
 
     [HttpDelete("{id}")]
+    [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteArticle([FromRoute] long id)
