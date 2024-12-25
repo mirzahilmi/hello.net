@@ -3,6 +3,7 @@ namespace Hello.NET.Extensions;
 using System.Net;
 using System.Threading.RateLimiting;
 using Asp.Versioning;
+using Hello.NET.ExceptionHandlers;
 
 public static class Application
 {
@@ -63,6 +64,8 @@ public static class Application
                 )
             );
         });
+        builder.Services.AddExceptionHandler<TimeOutExceptionHandler>();
+        builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
         builder.Services.AddControllers();
         builder.Services.AddResponseCaching();
     }
