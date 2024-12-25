@@ -2,6 +2,7 @@ using Asp.Versioning;
 using FluentValidation;
 using Hello.NET.Data;
 using Hello.NET.Domain.Services;
+using Hello.NET.Filters;
 using Hello.NET.Mapping;
 using Hello.NET.Mapping.Interfaces;
 using Hello.NET.Options;
@@ -24,6 +25,7 @@ public static class Extensions
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         builder.Services.AddScoped<IArticleMapper, ArticleMapper>();
         builder.Services.AddScoped<IArticleService, ArticleService>();
+        builder.Services.AddScoped<InputValidationFilter>();
         builder.Services.AddCors(options =>
             options.AddPolicy(
                 "AllowAll",

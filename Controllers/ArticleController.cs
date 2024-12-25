@@ -4,6 +4,7 @@ using Asp.Versioning;
 using FluentValidation;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Services;
+using Hello.NET.Filters;
 using Hello.NET.Mapping.Interfaces;
 using Hello.NET.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -42,17 +43,12 @@ public class ArticleController(
 
     [HttpPost]
     [MapToApiVersion(1.0)]
+    [ServiceFilter<InputValidationFilter>]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Article>> PostArticle(
         [FromBody] ArticleDto article
     )
     {
-        var result = await _validator.ValidateAsync(article);
-        if (!result.IsValid)
-            return ValidationProblem(
-                new ValidationProblemDetails(result.ToDictionary())
-            );
-
         var _article = _mapper.Map(article);
         if (_article == null)
             return BadRequest();
@@ -68,6 +64,7 @@ public class ArticleController(
 
     [HttpPut("{id}")]
     [MapToApiVersion(1.0)]
+    [ServiceFilter<InputValidationFilter>]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> PutArticle(
@@ -75,12 +72,6 @@ public class ArticleController(
         [FromBody] ArticleDto article
     )
     {
-        var result = await _validator.ValidateAsync(article);
-        if (!result.IsValid)
-            return ValidationProblem(
-                new ValidationProblemDetails(result.ToDictionary())
-            );
-
         var _article = _mapper.Map(article);
         if (_article == null)
             return BadRequest();
