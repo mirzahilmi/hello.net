@@ -43,7 +43,7 @@ public class ArticleController(
 
     [HttpPost]
     [MapToApiVersion(1.0)]
-    [ServiceFilter<InputValidationFilter>]
+    [ServiceFilter<InputValidationFilter<ArticleDto>>]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Article>> PostArticle(
         [FromBody] ArticleDto article
@@ -64,7 +64,7 @@ public class ArticleController(
 
     [HttpPut("{id}")]
     [MapToApiVersion(1.0)]
-    [ServiceFilter<InputValidationFilter>]
+    [ServiceFilter<InputValidationFilter<ArticleDto>>]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> PutArticle(

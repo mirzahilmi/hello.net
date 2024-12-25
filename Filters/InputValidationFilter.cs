@@ -1,14 +1,13 @@
 using FluentValidation;
-using Hello.NET.Domain.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Hello.NET.Filters;
 
-public class InputValidationFilter(IValidator<ArticleDto> validator)
+public class InputValidationFilter<T>(IValidator<T> validator)
     : IAsyncActionFilter
 {
-    private readonly IValidator<ArticleDto> _validator = validator;
+    private readonly IValidator<T> _validator = validator;
 
     public async Task OnActionExecutionAsync(
         ActionExecutingContext context,
@@ -16,13 +15,13 @@ public class InputValidationFilter(IValidator<ArticleDto> validator)
     )
     {
         context.ActionArguments.TryGetValue("article", out var arg);
-        if (arg is not ArticleDto article)
+        if (arg is not T model)
         {
             context.Result = new BadRequestResult();
             return;
         }
 
-        var result = await _validator.ValidateAsync(article);
+        var result = await _validator.ValidateAsync(model);
         if (!result.IsValid)
         {
             result.Errors.ForEach(err =>
