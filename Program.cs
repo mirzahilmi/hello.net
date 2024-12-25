@@ -2,7 +2,8 @@ using Hello.NET.Extensions;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddApplicationServices();
+builder.AddApplicationDependency();
+builder.AddApplicationConfiguration();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
