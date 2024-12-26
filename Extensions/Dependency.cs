@@ -15,7 +15,7 @@ public static class Dependency
         this IHostApplicationBuilder builder
     )
     {
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        builder.Services.AddDbContextPool<ApplicationDbContext>(options =>
             options.UseNpgsql(
                 builder.Configuration.GetConnectionString("PrimaryDatabase")
             )
