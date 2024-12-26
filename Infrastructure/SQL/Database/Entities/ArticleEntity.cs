@@ -1,8 +1,8 @@
-namespace Hello.NET.Models;
+namespace Hello.NET.Infrastructure.SQL.Database.Entities;
 
 using System.ComponentModel.DataAnnotations;
 
-public class Article
+public class ArticleEntity
 {
     [Key]
     public long ID { get; set; }

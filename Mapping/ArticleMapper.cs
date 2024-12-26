@@ -1,15 +1,15 @@
 using Hello.NET.Domain.DTOs;
-using Hello.NET.Models;
+using Hello.NET.Infrastructure.SQL.Database.Entities;
 using Hello.NET.Mapping.Interfaces;
 
 namespace Hello.NET.Mapping;
 
 public class ArticleMapper : IArticleMapper
 {
-    public Article? Map(ArticleDto article)
+    public ArticleEntity? Map(ArticleDto article)
     {
         return article is not null
-            ? new Article
+            ? new ArticleEntity
             {
                 Title = article.Title,
                 Slug = article.Slug,
@@ -19,7 +19,7 @@ public class ArticleMapper : IArticleMapper
             : null;
     }
 
-    public ArticleDto? Map(Article article)
+    public ArticleDto? Map(ArticleEntity article)
     {
         return article is not null
             ? new ArticleDto

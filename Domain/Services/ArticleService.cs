@@ -1,5 +1,5 @@
-using Hello.NET.Data;
-using Hello.NET.Models;
+using Hello.NET.Infrastructure.SQL.Database;
+using Hello.NET.Infrastructure.SQL.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hello.NET.Domain.Services;
@@ -11,7 +11,7 @@ public class ArticleService(ApplicationDbContext context) : IArticleService
     public async Task<bool> CheckArticleAsync(long id) =>
         await _context.Articles.AnyAsync(article => article.ID == id);
 
-    public async Task<long> CreateArticleAsync(Article article)
+    public async Task<long> CreateArticleAsync(ArticleEntity article)
     {
         _context.Articles.Add(article);
         await _context.SaveChangesAsync();
@@ -23,13 +23,13 @@ public class ArticleService(ApplicationDbContext context) : IArticleService
             .Articles.Where(article => article.ID == id)
             .ExecuteDeleteAsync();
 
-    public async Task<Article?> GetArticleAsync(long id) =>
+    public async Task<ArticleEntity?> GetArticleAsync(long id) =>
         await _context.Articles.FindAsync(id);
 
-    public async Task<List<Article>> GetArticlesAsync() =>
+    public async Task<List<ArticleEntity>> GetArticlesAsync() =>
         await _context.Articles.ToListAsync();
 
-    public async Task UpdateArticleAsync(long id, Article article) =>
+    public async Task UpdateArticleAsync(long id, ArticleEntity article) =>
         await _context
             .Articles.Where(_article => _article.ID == id)
             .ExecuteUpdateAsync(setters =>

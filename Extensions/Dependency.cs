@@ -1,10 +1,10 @@
 namespace Hello.NET.Extensions;
 
 using FluentValidation;
-using Hello.NET.Data;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Services;
 using Hello.NET.Filters;
+using Hello.NET.Infrastructure.SQL.Database;
 using Hello.NET.Mapping;
 using Hello.NET.Mapping.Interfaces;
 using Microsoft.EntityFrameworkCore;

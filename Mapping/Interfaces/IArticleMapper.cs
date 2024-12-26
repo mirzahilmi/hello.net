@@ -1,9 +1,9 @@
 using Hello.NET.Domain.DTOs;
-using Hello.NET.Models;
+using Hello.NET.Infrastructure.SQL.Database.Entities;
 
 namespace Hello.NET.Mapping.Interfaces;
 
 public interface IArticleMapper {
-    public Article? Map(ArticleDto article);
-    public ArticleDto? Map(Article article);
+    public ArticleEntity? Map(ArticleDto article);
+    public ArticleDto? Map(ArticleEntity article);
 }

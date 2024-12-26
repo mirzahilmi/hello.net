@@ -1,13 +1,13 @@
-using Hello.NET.Models;
+using Hello.NET.Infrastructure.SQL.Database.Entities;
 
 namespace Hello.NET.Domain.Services;
 
 public interface IArticleService
 {
-    Task<List<Article>> GetArticlesAsync();
-    Task<Article?> GetArticleAsync(long id);
+    Task<List<ArticleEntity>> GetArticlesAsync();
+    Task<ArticleEntity?> GetArticleAsync(long id);
     Task<bool> CheckArticleAsync(long id);
-    Task<long> CreateArticleAsync(Article article);
-    Task UpdateArticleAsync(long id, Article article);
+    Task<long> CreateArticleAsync(ArticleEntity article);
+    Task UpdateArticleAsync(long id, ArticleEntity article);
     Task DeleteArticleAsync(long id);
 }
