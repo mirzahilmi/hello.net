@@ -1,10 +1,12 @@
+using Hello.NET.Domain.Repositories;
 using Hello.NET.Infrastructure.SQL.Database;
 using Hello.NET.Infrastructure.SQL.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hello.NET.Domain.Services;
+namespace Hello.NET.Infrastructure.SQL.Repositories;
 
-public class ArticleService(ApplicationDbContext context) : IArticleService
+public class ArticleRepository(ApplicationDbContext context)
+    : IArticleRepository
 {
     private readonly ApplicationDbContext _context = context;
 
@@ -18,7 +20,7 @@ public class ArticleService(ApplicationDbContext context) : IArticleService
         return article.ID;
     }
 
-    public async Task DeleteArticleAsync(long id) =>
+    public async Task<int> DeleteArticleAsync(long id) =>
         await _context
             .Articles.Where(article => article.ID == id)
             .ExecuteDeleteAsync();
@@ -29,7 +31,7 @@ public class ArticleService(ApplicationDbContext context) : IArticleService
     public async Task<List<ArticleEntity>> GetArticlesAsync() =>
         await _context.Articles.ToListAsync();
 
-    public async Task UpdateArticleAsync(long id, ArticleEntity article) =>
+    public async Task<int> UpdateArticleAsync(long id, ArticleEntity article) =>
         await _context
             .Articles.Where(_article => _article.ID == id)
             .ExecuteUpdateAsync(setters =>

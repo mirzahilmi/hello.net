@@ -3,7 +3,7 @@ namespace Hello.NET.Controllers;
 using Asp.Versioning;
 using FluentValidation;
 using Hello.NET.Domain.DTOs;
-using Hello.NET.Domain.Services;
+using Hello.NET.Domain.Repositories;
 using Hello.NET.Filters;
 using Hello.NET.Mapping.Interfaces;
 using Hello.NET.Infrastructure.SQL.Database.Entities;
@@ -13,12 +13,12 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 [Route("api/v{version:apiVersion}/articles")]
 public class ArticleController(
-    IArticleService service,
+    IArticleRepository service,
     IArticleMapper mapper,
     IValidator<ArticleDto> validator
 ) : ControllerBase
 {
-    private readonly IArticleService _service = service;
+    private readonly IArticleRepository _service = service;
     private readonly IArticleMapper _mapper = mapper;
     private readonly IValidator<ArticleDto> _validator = validator;
 
