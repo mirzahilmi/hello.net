@@ -25,9 +25,21 @@ public class ArticleController(
     [HttpGet]
     [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<ArticleEntity>>> GetArticles(
+    public async Task<IEnumerable<ArticleEntity>> GetArticles(
         [FromQuery] PagingDto paging
     ) => await _service.GetArticlesAsync(paging);
+
+    [HttpGet("stream")]
+    [MapToApiVersion(1.0)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async IAsyncEnumerable<ArticleEntity> GetArticlesStream(
+        [FromQuery] PagingDto paging
+    )
+    {
+        var articles = await _service.GetArticlesAsync(paging);
+        foreach (var article in articles)
+            yield return article;
+    }
 
     [HttpGet("{id}")]
     [MapToApiVersion(1.0)]
