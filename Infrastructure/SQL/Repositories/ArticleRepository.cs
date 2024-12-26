@@ -10,8 +10,13 @@ public class ArticleRepository(ApplicationDbContext context)
 {
     private readonly ApplicationDbContext _context = context;
 
-    public async Task<bool> CheckArticleAsync(long id) =>
-        await _context.Articles.AnyAsync(article => article.ID == id);
+    public async Task<ArticleEntity?> GetArticleAsync(long id) =>
+        await _context
+            .Articles.AsNoTracking()
+            .FirstAsync(article => article.ID == id);
+
+    public async Task<List<ArticleEntity>> GetArticlesAsync() =>
+        await _context.Articles.AsNoTracking().ToListAsync();
 
     public async Task<long> CreateArticleAsync(ArticleEntity article)
     {
@@ -20,20 +25,16 @@ public class ArticleRepository(ApplicationDbContext context)
         return article.ID;
     }
 
-    public async Task<int> DeleteArticleAsync(long id) =>
+    public async Task<bool> CheckArticleAsync(long id) =>
         await _context
-            .Articles.Where(article => article.ID == id)
-            .ExecuteDeleteAsync();
-
-    public async Task<ArticleEntity?> GetArticleAsync(long id) =>
-        await _context.Articles.FindAsync(id);
-
-    public async Task<List<ArticleEntity>> GetArticlesAsync() =>
-        await _context.Articles.ToListAsync();
+            .Articles.AsNoTracking()
+            .AnyAsync(article => article.ID == id);
 
     public async Task<int> UpdateArticleAsync(long id, ArticleEntity article) =>
         await _context
-            .Articles.Where(_article => _article.ID == id)
+            // also not sure
+            .Articles.AsNoTracking()
+            .Where(_article => _article.ID == id)
             .ExecuteUpdateAsync(setters =>
                 setters
                     .SetProperty(_article => _article.Title, article.Title)
@@ -44,4 +45,11 @@ public class ArticleRepository(ApplicationDbContext context)
                         article.PublishedAt
                     )
             );
+
+    public async Task<int> DeleteArticleAsync(long id) =>
+        await _context
+            // not sure disabling tracking here add significant difference
+            .Articles.AsNoTracking()
+            .Where(article => article.ID == id)
+            .ExecuteDeleteAsync();
 }
