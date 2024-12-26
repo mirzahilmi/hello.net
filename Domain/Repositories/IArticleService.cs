@@ -1,10 +1,11 @@
+using Hello.NET.Domain.DTOs;
 using Hello.NET.Infrastructure.SQL.Database.Entities;
 
 namespace Hello.NET.Domain.Repositories;
 
 public interface IArticleRepository
 {
-    Task<List<ArticleEntity>> GetArticlesAsync();
+    Task<List<ArticleEntity>> GetArticlesAsync(PagingDto paging);
     Task<ArticleEntity?> GetArticleAsync(long id);
     Task<bool> CheckArticleAsync(long id);
     Task<long> CreateArticleAsync(ArticleEntity article);

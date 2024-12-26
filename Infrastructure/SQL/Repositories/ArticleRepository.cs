@@ -1,3 +1,4 @@
+using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Repositories;
 using Hello.NET.Infrastructure.SQL.Database;
 using Hello.NET.Infrastructure.SQL.Database.Entities;
@@ -15,8 +16,12 @@ public class ArticleRepository(ApplicationDbContext context)
             .Articles.AsNoTracking()
             .FirstOrDefaultAsync(article => article.ID == id);
 
-    public async Task<List<ArticleEntity>> GetArticlesAsync() =>
-        await _context.Articles.AsNoTracking().ToListAsync();
+    public async Task<List<ArticleEntity>> GetArticlesAsync(PagingDto paging) =>
+        await _context
+            .Articles.AsNoTracking()
+            .Skip((paging.PageIndex - 1) * paging.PageSize)
+            .Take(paging.PageSize)
+            .ToListAsync();
 
     public async Task<long> CreateArticleAsync(ArticleEntity article)
     {

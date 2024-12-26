@@ -5,8 +5,8 @@ using FluentValidation;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Repositories;
 using Hello.NET.Filters;
-using Hello.NET.Mapping.Interfaces;
 using Hello.NET.Infrastructure.SQL.Database.Entities;
+using Hello.NET.Mapping.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiVersion(1.0)]
@@ -25,14 +25,17 @@ public class ArticleController(
     [HttpGet]
     [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<ArticleEntity>>> GetArticles() =>
-        await _service.GetArticlesAsync();
+    public async Task<ActionResult<IEnumerable<ArticleEntity>>> GetArticles(
+        [FromQuery] PagingDto paging
+    ) => await _service.GetArticlesAsync(paging);
 
     [HttpGet("{id}")]
     [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ArticleEntity>> GetArticle([FromRoute] long id)
+    public async Task<ActionResult<ArticleEntity>> GetArticle(
+        [FromRoute] long id
+    )
     {
         var article = await _service.GetArticleAsync(id);
         if (article == null)
