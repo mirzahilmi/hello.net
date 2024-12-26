@@ -13,14 +13,14 @@ public class ArticleRepository(ApplicationDbContext context)
     public async Task<ArticleEntity?> GetArticleAsync(long id) =>
         await _context
             .Articles.AsNoTracking()
-            .FirstAsync(article => article.ID == id);
+            .FirstOrDefaultAsync(article => article.ID == id);
 
     public async Task<List<ArticleEntity>> GetArticlesAsync() =>
         await _context.Articles.AsNoTracking().ToListAsync();
 
     public async Task<long> CreateArticleAsync(ArticleEntity article)
     {
-        _context.Articles.Add(article);
+        await _context.Articles.AddAsync(article);
         await _context.SaveChangesAsync();
         return article.ID;
     }
@@ -32,7 +32,7 @@ public class ArticleRepository(ApplicationDbContext context)
 
     public async Task<int> UpdateArticleAsync(long id, ArticleEntity article) =>
         await _context
-            // also not sure
+            // not sure disabling tracking here has any implication
             .Articles.AsNoTracking()
             .Where(_article => _article.ID == id)
             .ExecuteUpdateAsync(setters =>
@@ -48,7 +48,7 @@ public class ArticleRepository(ApplicationDbContext context)
 
     public async Task<int> DeleteArticleAsync(long id) =>
         await _context
-            // not sure disabling tracking here add significant difference
+            // also not sure
             .Articles.AsNoTracking()
             .Where(article => article.ID == id)
             .ExecuteDeleteAsync();
