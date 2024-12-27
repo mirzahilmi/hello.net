@@ -4,16 +4,16 @@
 The goals of this project is not really trying to solve a real-world problem
 scenario, but rather to getting my hand dirty with .NET ecosystem nitty-gritty.
 
-- [ ] Learn about ASP.NET
+- [x] Learn about ASP.NET
 - [x] Understand dependency injection in ASP.NET
-- [x] Use ASP.NET Swagger Generator => I changed it to use Scalar instead
-- [ ] API Versioning
 - [ ] Clean Architecture in ASP.NET
+- [x] Use ASP.NET Swagger Generator => I changed it to use Scalar instead
+- [x] API Versioning
 - [x] Explore about Options Pattern
-- [x] Instrumentation through logging
+- [x] Apply Rate Limiting
+- [ ] Instrumentation through logging
 - [ ] Demonstrate N+1 problem solution
 - [ ] Demonstrate ACID properties
-- [ ] Apply Rate Limiting
 - [ ] Implement full-text search with ElasticSearch
 - [ ] Implement unit & load testing
 
