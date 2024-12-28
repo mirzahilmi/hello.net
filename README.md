@@ -6,7 +6,7 @@ scenario, but rather to getting my hand dirty with .NET ecosystem nitty-gritty.
 
 - [x] Learn about ASP.NET
 - [x] Understand dependency injection in ASP.NET
-- [ ] Clean Architecture in ASP.NET
+- [x] Clean Architecture in ASP.NET
 - [x] Use ASP.NET Swagger Generator => I changed it to use Scalar instead
 - [x] API Versioning
 - [x] Explore about Options Pattern
