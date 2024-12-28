@@ -3,11 +3,13 @@ namespace Hello.NET.Extensions;
 using FluentValidation;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Repositories;
+using Hello.NET.Domain.Services;
 using Hello.NET.Filters;
 using Hello.NET.Infrastructure.SQL.Database;
 using Hello.NET.Infrastructure.SQL.Repositories;
 using Hello.NET.Mapping;
 using Hello.NET.Mapping.Interfaces;
+using Hello.NET.Usecase.Services;
 using Microsoft.EntityFrameworkCore;
 
 public static class Dependency
@@ -28,6 +30,7 @@ public static class Dependency
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         builder.Services.AddScoped<IArticleMapper, ArticleMapper>();
         builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
+        builder.Services.AddScoped<IArticleService, ArticleService>();
         builder.Services.AddScoped<InputValidationFilter<ArticleDto>>();
     }
 }

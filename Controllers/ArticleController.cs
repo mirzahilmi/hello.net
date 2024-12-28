@@ -3,7 +3,7 @@ namespace Hello.NET.Controllers;
 using Asp.Versioning;
 using FluentValidation;
 using Hello.NET.Domain.DTOs;
-using Hello.NET.Domain.Repositories;
+using Hello.NET.Domain.Services;
 using Hello.NET.Filters;
 using Hello.NET.Infrastructure.SQL.Database.Entities;
 using Hello.NET.Mapping.Interfaces;
@@ -13,30 +13,30 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 [Route("api/v{version:apiVersion}/articles")]
 public class ArticleController(
-    IArticleRepository service,
+    IArticleService service,
     IArticleMapper mapper,
     IValidator<ArticleDto> validator
 ) : ControllerBase
 {
-    private readonly IArticleRepository _service = service;
+    private readonly IArticleService _service = service;
     private readonly IArticleMapper _mapper = mapper;
     private readonly IValidator<ArticleDto> _validator = validator;
 
     [HttpGet]
     [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IEnumerable<ArticleEntity>> GetArticles(
+    public async Task<IEnumerable<ArticleDto>> GetArticles(
         [FromQuery] PagingDto paging
-    ) => await _service.GetArticlesAsync(paging);
+    ) => await _service.RetrieveUsersAsync(paging);
 
     [HttpGet("stream")]
     [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async IAsyncEnumerable<ArticleEntity> GetArticlesStream(
+    public async IAsyncEnumerable<ArticleDto> GetArticlesStream(
         [FromQuery] PagingDto paging
     )
     {
-        var articles = await _service.GetArticlesAsync(paging);
+        var articles = await _service.RetrieveUsersAsync(paging);
         foreach (var article in articles)
             yield return article;
     }
@@ -45,11 +45,9 @@ public class ArticleController(
     [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ArticleEntity>> GetArticle(
-        [FromRoute] long id
-    )
+    public async Task<ActionResult<ArticleDto>> GetArticle([FromRoute] long id)
     {
-        var article = await _service.GetArticleAsync(id);
+        var article = await _service.RetrieveUserAsync(id);
         if (article == null)
             return NotFound();
 
@@ -64,17 +62,9 @@ public class ArticleController(
         [FromBody] ArticleDto article
     )
     {
-        var _article = _mapper.Map(article);
-        if (_article == null)
-            return BadRequest();
+        var id = await _service.CreateArticleAsync(article);
 
-        await _service.CreateArticleAsync(_article);
-
-        return CreatedAtAction(
-            nameof(GetArticle),
-            new { id = _article.ID },
-            _article
-        );
+        return CreatedAtAction(nameof(GetArticle), new { id }, article);
     }
 
     [HttpPut("{id}")]
@@ -87,16 +77,8 @@ public class ArticleController(
         [FromBody] ArticleDto article
     )
     {
-        var _article = _mapper.Map(article);
-        if (_article == null)
-            return BadRequest();
-
-        var exist = await _service.CheckArticleAsync(id);
-        if (!exist)
-            return NotFound();
-
-        await _service.UpdateArticleAsync(id, _article);
-
+        article.ID = id;
+        await _service.UpdateArticleAsync(article);
         return NoContent();
     }
 
@@ -106,12 +88,7 @@ public class ArticleController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteArticle([FromRoute] long id)
     {
-        var exist = await _service.CheckArticleAsync(id);
-        if (!exist)
-            return NotFound();
-
         await _service.DeleteArticleAsync(id);
-
         return NoContent();
     }
 }

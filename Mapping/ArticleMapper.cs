@@ -31,4 +31,10 @@ public class ArticleMapper : IArticleMapper
             }
             : null;
     }
+
+    public List<ArticleEntity> Map(List<ArticleDto> articles) =>
+        [.. articles.Select(Map)];
+
+    public List<ArticleDto> Map(List<ArticleEntity> articles) =>
+        [.. articles.Select(Map)];
 }
