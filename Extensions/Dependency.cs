@@ -11,6 +11,7 @@ using Hello.NET.Mapping;
 using Hello.NET.Mapping.Interfaces;
 using Hello.NET.Usecase.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 public static class Dependency
 {
@@ -21,11 +22,11 @@ public static class Dependency
         builder.Services.AddDbContextPool<ApplicationDbContext>(options =>
             options.UseNpgsql(
                 builder.Configuration.GetConnectionString("PrimaryDatabase"),
-                poolOptions =>
-                {
-                    poolOptions.EnableRetryOnFailure(3);
-                }
+                poolOptions => poolOptions.EnableRetryOnFailure(3)
             )
+        );
+        builder.Services.AddSerilog(options =>
+            options.ReadFrom.Configuration(builder.Configuration)
         );
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         builder.Services.AddScoped<IArticleMapper, ArticleMapper>();

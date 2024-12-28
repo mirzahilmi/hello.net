@@ -15,19 +15,35 @@ using Microsoft.AspNetCore.Mvc;
 public class ArticleController(
     IArticleService service,
     IArticleMapper mapper,
-    IValidator<ArticleDto> validator
+    IValidator<ArticleDto> validator,
+    ILogger<ArticleController> logger
 ) : ControllerBase
 {
     private readonly IArticleService _service = service;
     private readonly IArticleMapper _mapper = mapper;
     private readonly IValidator<ArticleDto> _validator = validator;
+    private readonly ILogger<ArticleController> _logger = logger;
 
     [HttpGet]
     [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IEnumerable<ArticleDto>> GetArticles(
+    public async Task<ActionResult<IEnumerable<ArticleDto>>> GetArticles(
         [FromQuery] PagingDto paging
-    ) => await _service.RetrieveUsersAsync(paging);
+    )
+    {
+        _logger.LogDebug(
+            "Getting article with page index of {pageIndex} and page size of {pageSize}",
+            paging.PageIndex,
+            paging.PageSize
+        );
+        var articles = await _service.RetrieveArticlesAsync(paging);
+        _logger.LogInformation(
+            "Received {count} articles from the query",
+            articles.Count
+        );
+
+        return Ok(articles);
+    }
 
     [HttpGet("stream")]
     [MapToApiVersion(1.0)]
@@ -36,7 +52,17 @@ public class ArticleController(
         [FromQuery] PagingDto paging
     )
     {
-        var articles = await _service.RetrieveUsersAsync(paging);
+        _logger.LogDebug(
+            "Getting article with page index of {pageIndex} and page size of {pageSize}",
+            paging.PageIndex,
+            paging.PageSize
+        );
+        var articles = await _service.RetrieveArticlesAsync(paging);
+        _logger.LogInformation(
+            "Received {count} articles from the query",
+            articles.Count
+        );
+
         foreach (var article in articles)
             yield return article;
     }
@@ -47,9 +73,18 @@ public class ArticleController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ArticleDto>> GetArticle([FromRoute] long id)
     {
-        var article = await _service.RetrieveUserAsync(id);
+        _logger.LogDebug("Getting article with id of {articleID}", id);
+        var article = await _service.RetrieveArticleAsync(id);
         if (article == null)
+        {
+            _logger.LogError("Cannot find article with id of {articleID}", id);
             return NotFound();
+        }
+        _logger.LogInformation(
+            "Received article with id of {articleID} and title of {title}",
+            article.ID,
+            article.Title
+        );
 
         return article;
     }
@@ -62,8 +97,16 @@ public class ArticleController(
         [FromBody] ArticleDto article
     )
     {
+        _logger.LogDebug(
+            "Creating article with title of {title}",
+            article.Title
+        );
         var id = await _service.CreateArticleAsync(article);
-
+        _logger.LogInformation(
+            "Created article with id of {articleID} and title of {title}",
+            id,
+            article.Title
+        );
         return CreatedAtAction(nameof(GetArticle), new { id }, article);
     }
 
@@ -77,8 +120,18 @@ public class ArticleController(
         [FromBody] ArticleDto article
     )
     {
+        _logger.LogDebug(
+            "Updating article with id of {articleID} and title of {title}",
+            id,
+            article.Title
+        );
         article.ID = id;
         await _service.UpdateArticleAsync(article);
+        _logger.LogInformation(
+            "Updated article with id of {articleID} and title of {title}",
+            id,
+            article.Title
+        );
         return NoContent();
     }
 
@@ -88,7 +141,9 @@ public class ArticleController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteArticle([FromRoute] long id)
     {
+        _logger.LogDebug("Deleting article with id of {articleID}", id);
         await _service.DeleteArticleAsync(id);
+        _logger.LogInformation("Deleted article with id of {articleID}", id);
         return NoContent();
     }
 }

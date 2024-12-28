@@ -13,10 +13,10 @@ public class ArticleService(
     public IArticleRepository _repository = repository;
     public IArticleMapper _mapper = mapper;
 
-    public async Task<List<ArticleDto>> RetrieveUsersAsync(PagingDto paging) =>
+    public async Task<List<ArticleDto>> RetrieveArticlesAsync(PagingDto paging) =>
         _mapper.Map(await _repository.GetArticlesAsync(paging));
 
-    public async Task<ArticleDto?> RetrieveUserAsync(long id)
+    public async Task<ArticleDto?> RetrieveArticleAsync(long id)
     {
         var article = await _repository.GetArticleAsync(id);
         if (article == null)
