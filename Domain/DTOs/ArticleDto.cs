@@ -1,10 +1,13 @@
+using System.Text.Json.Serialization;
+
 namespace Hello.NET.Domain.DTOs;
 
-public class ArticleDto
+public record class ArticleDto
 {
+    [JsonIgnore]
     public long? ID { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Slug { get; set; } = string.Empty;
-    public string Content { get; set; } = string.Empty;
-    public DateTime PublishedAt { get; set; }
+    public required string Title { get; set; }
+    public required string Slug { get; set; }
+    public required string Content { get; set; }
+    public required DateTime PublishedAt { get; set; }
 }
