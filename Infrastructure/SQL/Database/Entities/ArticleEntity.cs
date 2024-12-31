@@ -1,7 +1,9 @@
 namespace Hello.NET.Infrastructure.SQL.Database.Entities;
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
+[Index(nameof(Slug), IsUnique = true)]
 public record class ArticleEntity
 {
     [Key]
