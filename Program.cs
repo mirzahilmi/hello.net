@@ -6,6 +6,7 @@ builder.AddApplicationDependency();
 builder.AddApplicationConfiguration();
 
 var app = builder.Build();
+app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
 {
     app.UseCors("AllowAll");

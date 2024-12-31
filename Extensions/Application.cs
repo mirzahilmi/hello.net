@@ -67,6 +67,7 @@ public static class Application
         builder.Services.AddExceptionHandler<DataViolationExceptionHandler>();
         builder.Services.AddExceptionHandler<TimeOutExceptionHandler>();
         builder.Services.AddExceptionHandler<DefaultExceptionHandler>();
+        builder.Services.AddProblemDetails();
         builder.Services.AddControllers();
         builder.Services.AddResponseCaching();
     }
