@@ -22,7 +22,7 @@ public class DefaultExceptionHandler : IExceptionHandler
                 Instance =
                     $"{httpContext.Request.Method} {httpContext.Request.Path}",
             },
-            cancellationToken: cancellationToken
+            cancellationToken
         );
         return true;
     }

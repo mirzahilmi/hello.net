@@ -1,4 +1,3 @@
-using System.Net;
 using Hello.NET.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -16,18 +15,23 @@ public sealed class DataViolationExceptionHandler : IExceptionHandler
     {
         if (exception is DataDuplicateException)
         {
+            var details = new ProblemDetails
+            {
+                Type =
+                    "https://datatracker.ietf.org/doc/html/rfc9110#section-15.5.10",
+                Title = "Conflict",
+                Status = StatusCodes.Status409Conflict,
+                Detail = exception.Message,
+                Instance =
+                    $"{httpContext.Request.Method} {httpContext.Request.Path}",
+            };
+
+            httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
             await httpContext.Response.WriteAsJsonAsync(
-                new ProblemDetails
-                {
-                    Status = (int)HttpStatusCode.InternalServerError,
-                    Type = exception.GetType().Name,
-                    Title = "Internal Server Error",
-                    Detail = exception.Message,
-                    Instance =
-                        $"{httpContext.Request.Method} {httpContext.Request.Path}",
-                },
-                cancellationToken: cancellationToken
+                details,
+                cancellationToken
             );
+
             return true;
         }
 

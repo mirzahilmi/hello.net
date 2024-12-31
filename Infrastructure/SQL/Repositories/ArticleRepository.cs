@@ -8,10 +8,13 @@ using Npgsql;
 
 namespace Hello.NET.Infrastructure.SQL.Repositories;
 
-public class ArticleRepository(ApplicationDbContext context)
-    : IArticleRepository
+public class ArticleRepository(
+    ApplicationDbContext context,
+    ILogger<ArticleRepository> logger
+) : IArticleRepository
 {
     private readonly ApplicationDbContext _context = context;
+    private readonly ILogger<ArticleRepository> _logger = logger;
 
     public async Task<ArticleEntity?> GetArticleAsync(long id) =>
         await _context
@@ -32,9 +35,12 @@ public class ArticleRepository(ApplicationDbContext context)
         {
             await _context.SaveChangesAsync();
         }
-        catch (NpgsqlException ex) when (ex.SqlState == "23505")
+        catch (DbUpdateException ex)
+            when (ex.InnerException is NpgsqlException _ex
+                && _ex.SqlState == "23505"
+            )
         {
-            throw new DataDuplicateException();
+            throw new DataDuplicateException("Slug already exists");
         }
         return article.ID;
     }
