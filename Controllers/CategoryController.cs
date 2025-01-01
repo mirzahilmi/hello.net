@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Hello.NET.Infrastructure.SQL.Database;
 using Hello.NET.Infrastructure.SQL.Database.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -5,8 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hello.NET.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion(1.0)]
     [ApiController]
+    [Route("api/v{version:apiVersion}/categories")]
     public class CategoryController(ApplicationDbContext context)
         : ControllerBase
     {
