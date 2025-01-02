@@ -1,6 +1,7 @@
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Repositories;
 using Hello.NET.Domain.Services;
+using Hello.NET.Infrastructure.SQL.Database.Entities;
 using Hello.NET.Mapping.Interfaces;
 
 namespace Hello.NET.Usecase.Services;
@@ -13,36 +14,44 @@ public class ArticleService(
     public IArticleRepository _repository = repository;
     public IArticleMapper _mapper = mapper;
 
-    public async Task<List<ArticleDto>> RetrieveArticlesAsync(PagingDto paging) =>
-        _mapper.Map(await _repository.GetArticlesAsync(paging));
+    public async Task<List<ArticleResourceResponse>> RetrieveArticlesAsync(
+        PagingDto paging
+    )
+    {
+        var articles = await _repository.GetArticlesAsync(paging);
+        return articles.ConvertAll(article =>
+            article.ToArticleResponse(article.ID)
+        );
+    }
 
-    public async Task<ArticleDto?> RetrieveArticleAsync(long id)
+    public async Task<ArticleResourceResponse?> RetrieveArticleAsync(long id)
     {
         var article = await _repository.GetArticleAsync(id);
         if (article == null)
             return null;
 
-        return _mapper.Map(article);
+        return article.ToArticleResponse(article.ID);
     }
 
-    public async Task<long> CreateArticleAsync(ArticleDto article)
+    public async Task<ArticleResourceResponse> CreateArticleAsync(
+        ArticleDto article
+    )
     {
-        var _article = _mapper.Map(article);
-        if (_article == null)
-            return 0L;
-
-        return await _repository.CreateArticleAsync(_article);
+        var id = await _repository.CreateArticleAsync(
+            article.ToArticleEntity()
+        );
+        return article.ToArticleResponse(id);
     }
 
-    public async Task<int> UpdateArticleAsync(ArticleDto article)
+    public async Task<ArticleResourceResponse> UpdateArticleAsync(
+        long id,
+        ArticleDto article
+    )
     {
-        var _article = _mapper.Map(article);
-        if (_article == null)
-            return 0;
-
-        return await _repository.UpdateArticleAsync(_article.ID, _article);
+        await _repository.UpdateArticleAsync(id, article.ToArticleEntity());
+        return article.ToArticleResponse(id);
     }
 
-    public async Task<int> DeleteArticleAsync(long id) =>
+    public async Task DeleteArticleAsync(long id) =>
         await _repository.DeleteArticleAsync(id);
 }

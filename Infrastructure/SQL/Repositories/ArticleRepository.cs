@@ -19,11 +19,13 @@ public class ArticleRepository(
     public async Task<ArticleEntity?> GetArticleAsync(long id) =>
         await _context
             .Articles.AsNoTracking()
+            .Include(article => article.Categories)
             .FirstOrDefaultAsync(article => article.ID == id);
 
     public async Task<List<ArticleEntity>> GetArticlesAsync(PagingDto paging) =>
         await _context
             .Articles.AsNoTracking()
+            .Include(article => article.Categories)
             .Skip((paging.PageIndex - 1) * paging.PageSize)
             .Take(paging.PageSize)
             .ToListAsync();

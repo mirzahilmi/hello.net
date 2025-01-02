@@ -5,7 +5,6 @@ using FluentValidation;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Services;
 using Hello.NET.Filters;
-using Hello.NET.Infrastructure.SQL.Database.Entities;
 using Hello.NET.Mapping.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,9 +26,9 @@ public class ArticleController(
     [HttpGet]
     [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<ArticleDto>>> GetArticles(
-        [FromQuery] PagingDto paging
-    )
+    public async Task<
+        ActionResult<IEnumerable<ArticleResourceResponse>>
+    > GetArticles([FromQuery] PagingDto paging)
     {
         _logger.LogDebug(
             "Getting article with page index of {pageIndex} and page size of {pageSize}",
@@ -48,7 +47,7 @@ public class ArticleController(
     [HttpGet("stream")]
     [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async IAsyncEnumerable<ArticleDto> GetArticlesStream(
+    public async IAsyncEnumerable<ArticleResourceResponse> GetArticlesStream(
         [FromQuery] PagingDto paging
     )
     {
@@ -71,7 +70,9 @@ public class ArticleController(
     [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ArticleDto>> GetArticle([FromRoute] long id)
+    public async Task<ActionResult<ArticleResourceResponse>> GetArticle(
+        [FromRoute] long id
+    )
     {
         _logger.LogDebug("Getting article with id of {articleID}", id);
         var article = await _service.RetrieveArticleAsync(id);
@@ -93,7 +94,7 @@ public class ArticleController(
     [MapToApiVersion(1.0)]
     [ServiceFilter<InputValidationFilter<ArticleDto>>]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<ActionResult<ArticleEntity>> PostArticle(
+    public async Task<ActionResult<ArticleResourceResponse>> PostArticle(
         [FromBody] ArticleDto article
     )
     {
@@ -125,8 +126,7 @@ public class ArticleController(
             id,
             article.Title
         );
-        article.ID = id;
-        await _service.UpdateArticleAsync(article);
+        await _service.UpdateArticleAsync(id, article);
         _logger.LogInformation(
             "Updated article with id of {articleID} and title of {title}",
             id,
