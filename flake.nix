@@ -25,6 +25,7 @@
     devShells = forEachSupportedSystem ({pkgs}: {
       default = pkgs.mkShell {
         packages = with pkgs; [
+          netcoredbg
           csharpier
           roslyn-ls
           (with dotnetCorePackages;
