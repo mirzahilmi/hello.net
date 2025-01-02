@@ -24,7 +24,6 @@ public class ArticleController(
     private readonly ILogger<ArticleController> _logger = logger;
 
     [HttpGet]
-    [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<
         ActionResult<IEnumerable<ArticleResourceResponse>>
@@ -45,7 +44,6 @@ public class ArticleController(
     }
 
     [HttpGet("stream")]
-    [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async IAsyncEnumerable<ArticleResourceResponse> GetArticlesStream(
         [FromQuery] PagingDto paging
@@ -67,7 +65,6 @@ public class ArticleController(
     }
 
     [HttpGet("{id}")]
-    [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ArticleResourceResponse>> GetArticle(
@@ -91,7 +88,6 @@ public class ArticleController(
     }
 
     [HttpPost]
-    [MapToApiVersion(1.0)]
     [ServiceFilter<InputValidationFilter<ArticleDto>>]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<ArticleResourceResponse>> PostArticle(
@@ -112,7 +108,6 @@ public class ArticleController(
     }
 
     [HttpPut("{id}")]
-    [MapToApiVersion(1.0)]
     [ServiceFilter<InputValidationFilter<ArticleDto>>]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -136,7 +131,6 @@ public class ArticleController(
     }
 
     [HttpDelete("{id}")]
-    [MapToApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteArticle([FromRoute] long id)
