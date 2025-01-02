@@ -1,12 +1,12 @@
 namespace Hello.NET.Exceptions;
 
-public sealed class DataDuplicateException : Exception
+public sealed class DataConflictException : Exception
 {
-    public DataDuplicateException() { }
+    public DataConflictException() { }
 
-    public DataDuplicateException(string? message)
+    public DataConflictException(string? message)
         : base(message) { }
 
-    public DataDuplicateException(string? message, Exception? innerException)
+    public DataConflictException(string? message, Exception? innerException)
         : base(message, innerException) { }
 }

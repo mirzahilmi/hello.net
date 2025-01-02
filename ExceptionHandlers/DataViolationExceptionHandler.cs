@@ -13,7 +13,7 @@ public sealed class DataViolationExceptionHandler : IExceptionHandler
         CancellationToken cancellationToken
     )
     {
-        if (exception is DataDuplicateException)
+        if (exception is DataConflictException)
         {
             var details = new ProblemDetails
             {

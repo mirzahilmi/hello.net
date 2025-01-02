@@ -40,7 +40,7 @@ public class ArticleRepository(
                 && _ex.SqlState == "23505"
             )
         {
-            throw new DataDuplicateException("Slug already exists");
+            throw new DataConflictException("Slug already exists");
         }
         return article.ID;
     }

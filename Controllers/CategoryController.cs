@@ -1,85 +1,72 @@
 using Asp.Versioning;
-using Hello.NET.Infrastructure.SQL.Database;
-using Hello.NET.Infrastructure.SQL.Database.Entities;
+using Hello.NET.Domain.DTOs;
+using Hello.NET.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hello.NET.Controllers
 {
     [ApiVersion(1.0)]
     [ApiController]
     [Route("api/v{version:apiVersion}/categories")]
-    public class CategoryController(ApplicationDbContext context)
-        : ControllerBase
+    public class CategoryController(ICategoryService service) : ControllerBase
     {
-        private readonly ApplicationDbContext _context = context;
+        private readonly ICategoryService _service = service;
 
         [HttpGet]
         public async Task<
-            ActionResult<IEnumerable<CategoryEntity>>
-        > GetCategories()
+            ActionResult<IEnumerable<CategoryResourceResponse>>
+        > GetCategories([FromQuery] PagingDto paging)
         {
-            return await _context.Categories.ToListAsync();
+            return await _service.RetrieveCategoriesAsync(paging);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CategoryEntity>> GetCategory(long id)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<CategoryResourceResponse>> GetCategory(
+            [FromRoute] long id
+        )
         {
-            var categoryEntity = await _context.Categories.FindAsync(id);
-
-            if (categoryEntity == null)
+            var category = await _service.RetrieveCategoryAsync(id);
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return categoryEntity;
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(
-            long id,
-            CategoryEntity categoryEntity
-        )
-        {
-            if (id != categoryEntity.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(categoryEntity).State = EntityState.Modified;
-
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(category);
         }
 
         [HttpPost]
-        public async Task<ActionResult<CategoryEntity>> PostCategory(
-            CategoryEntity categoryEntity
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult<CategoryResourceResponse>> PostCategory(
+            [FromBody] CategoryCreateRequest category
         )
         {
-            _context.Categories.Add(categoryEntity);
-            await _context.SaveChangesAsync();
-
+            var created = await _service.CreateCategoryAsync(category);
             return CreatedAtAction(
-                "GetCategoryEntity",
-                new { id = categoryEntity.ID },
-                categoryEntity
+                "GetCategory",
+                new { id = created.ID },
+                created
             );
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCategory(long id)
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> PutCategory(
+            [FromRoute] long id,
+            [FromBody] CategoryUpdateRequest category
+        )
         {
-            var categoryEntity = await _context.Categories.FindAsync(id);
-            if (categoryEntity == null)
-            {
-                return NotFound();
-            }
+            await _service.UpdateCategoryAsync(id, category);
+            return NoContent();
+        }
 
-            _context.Categories.Remove(categoryEntity);
-            await _context.SaveChangesAsync();
-
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> DeleteCategory([FromRoute] long id)
+        {
+            await _service.DeleteCategoryAsync(id);
             return NoContent();
         }
     }
