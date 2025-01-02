@@ -12,8 +12,9 @@ scenario, but rather to getting my hand dirty with .NET ecosystem nitty-gritty.
 - [x] Explore about Options Pattern
 - [x] Apply Rate Limiting
 - [x] Instrumentation through logging
-- [ ] Demonstrate N+1 problem solution
-- [ ] Demonstrate ACID properties
+- [x] Demonstrate N+1 problem solution
+- [ ] Demonstrate ACID
+- [ ] Implement server side caching with Redis
 - [ ] Implement full-text search with ElasticSearch
 - [ ] Implement unit & load testing
 
