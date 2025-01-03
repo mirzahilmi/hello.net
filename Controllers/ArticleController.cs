@@ -5,7 +5,6 @@ using FluentValidation;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Services;
 using Hello.NET.Filters;
-using Hello.NET.Mapping.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiVersion(1.0)]
@@ -13,13 +12,11 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/v{version:apiVersion}/articles")]
 public class ArticleController(
     IArticleService service,
-    IArticleMapper mapper,
     IValidator<ArticleDto> validator,
     ILogger<ArticleController> logger
 ) : ControllerBase
 {
     private readonly IArticleService _service = service;
-    private readonly IArticleMapper _mapper = mapper;
     private readonly IValidator<ArticleDto> _validator = validator;
     private readonly ILogger<ArticleController> _logger = logger;
 

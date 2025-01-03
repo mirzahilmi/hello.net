@@ -2,17 +2,12 @@ using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Repositories;
 using Hello.NET.Domain.Services;
 using Hello.NET.Infrastructure.SQL.Database.Entities;
-using Hello.NET.Mapping.Interfaces;
 
 namespace Hello.NET.Usecase.Services;
 
-public class ArticleService(
-    IArticleRepository repository,
-    IArticleMapper mapper
-) : IArticleService
+public class ArticleService(IArticleRepository repository) : IArticleService
 {
     public IArticleRepository _repository = repository;
-    public IArticleMapper _mapper = mapper;
 
     public async Task<List<ArticleResourceResponse>> RetrieveArticlesAsync(
         PagingDto paging
