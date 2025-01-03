@@ -10,7 +10,7 @@ scenario, but rather to getting my hand dirty with .NET ecosystem nitty-gritty.
 - [x] Use ASP.NET Swagger Generator => I changed it to use Scalar instead
 - [x] API Versioning
 - [x] Explore about Options Pattern
-- [x] Apply Rate Limiting
+- [x] Implement Rate Limiting
 - [x] Instrumentation through logging
 - [x] Demonstrate N+1 problem solution
 - [ ] Demonstrate ACID
