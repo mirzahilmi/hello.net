@@ -1,11 +1,15 @@
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Repositories;
 using Hello.NET.Domain.Services;
+using Hello.NET.Infrastructure.SQL.Database;
 using Hello.NET.Infrastructure.SQL.Database.Entities;
 
 namespace Hello.NET.Usecase.Services;
 
-public class ArticleService(IArticleRepository repository) : IArticleService
+public class ArticleService(
+    IArticleRepository repository,
+    Transaction transaction
+) : IArticleService
 {
     public IArticleRepository _repository = repository;
 
@@ -29,13 +33,17 @@ public class ArticleService(IArticleRepository repository) : IArticleService
     }
 
     public async Task<ArticleResourceResponse> CreateArticleAsync(
-        ArticleDto article
+        ArticleCreateRequest payload
     )
     {
-        var id = await _repository.CreateArticleAsync(
-            article.ToArticleEntity()
-        );
-        return article.ToArticleResponse(id);
+        var result = await transaction.ExecuteAsync(async () =>
+        {
+            var article = payload.ToArticleEntity();
+            article = await _repository.CreateArticleAsync(article);
+            return article;
+        });
+
+        return result.ToArticleResponse(result.ID);
     }
 
     public async Task<ArticleResourceResponse> UpdateArticleAsync(

@@ -1,7 +1,6 @@
 namespace Hello.NET.Controllers;
 
 using Asp.Versioning;
-using FluentValidation;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Services;
 using Hello.NET.Filters;
@@ -12,12 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/v{version:apiVersion}/articles")]
 public class ArticleController(
     IArticleService service,
-    IValidator<ArticleDto> validator,
     ILogger<ArticleController> logger
 ) : ControllerBase
 {
     private readonly IArticleService _service = service;
-    private readonly IValidator<ArticleDto> _validator = validator;
     private readonly ILogger<ArticleController> _logger = logger;
 
     [HttpGet]
@@ -85,27 +82,27 @@ public class ArticleController(
     }
 
     [HttpPost]
-    [ServiceFilter<InputValidationFilter<ArticleDto>>]
+    [ServiceFilter<InputValidationFilter<ArticleCreateRequest>>]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<ArticleResourceResponse>> PostArticle(
-        [FromBody] ArticleDto article
+        [FromBody] ArticleCreateRequest article
     )
     {
         _logger.LogDebug(
             "Creating article with title of {title}",
             article.Title
         );
-        var id = await _service.CreateArticleAsync(article);
+        var result = await _service.CreateArticleAsync(article);
         _logger.LogInformation(
             "Created article with id of {articleID} and title of {title}",
-            id,
-            article.Title
+            result.ID,
+            result.Title
         );
-        return CreatedAtAction(nameof(GetArticle), new { id }, article);
+        return CreatedAtAction(nameof(GetArticle), new { result.ID }, result);
     }
 
     [HttpPut("{id}")]
-    [ServiceFilter<InputValidationFilter<ArticleDto>>]
+    [ServiceFilter<InputValidationFilter<ArticleCreateRequest>>]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> PutArticle(

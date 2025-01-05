@@ -8,7 +8,7 @@ public interface IArticleRepository
     Task<List<ArticleEntity>> GetArticlesAsync(PagingDto paging);
     Task<ArticleEntity?> GetArticleAsync(long id);
     Task<bool> CheckArticleAsync(long id);
-    Task<long> CreateArticleAsync(ArticleEntity article);
+    Task<ArticleEntity> CreateArticleAsync(ArticleEntity article);
     Task<int> UpdateArticleAsync(long id, ArticleEntity article);
     Task<int> DeleteArticleAsync(long id);
 }

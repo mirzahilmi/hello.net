@@ -39,6 +39,19 @@ public sealed class CategoryService(
         return entity.ToCategoryResponse(id);
     }
 
+    public async Task<List<CategoryResourceResponse>> CreateCategoriesAsync(
+        List<CategoryEntity> categories
+    )
+    {
+        var ids = await _repository.CreateCategoriesAsync(categories);
+        return
+        [
+            .. categories.Select(
+                (category, i) => category.ToCategoryResponse(ids[i])
+            ),
+        ];
+    }
+
     public async Task<CategoryResourceResponse> UpdateCategoryAsync(
         long id,
         CategoryUpdateRequest category

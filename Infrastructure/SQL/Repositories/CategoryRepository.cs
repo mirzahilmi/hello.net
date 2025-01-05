@@ -47,6 +47,25 @@ public class CategoryRepository(ApplicationDbContext context)
         return category.ID;
     }
 
+    public async Task<List<long>> CreateCategoriesAsync(
+        List<CategoryEntity> categories
+    )
+    {
+        await _context.Categories.AddRangeAsync(categories);
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+            when (ex.InnerException is NpgsqlException _ex
+                && _ex.SqlState == "23505"
+            )
+        {
+            throw new DataConflictException("Category name already exists", ex);
+        }
+        return [.. categories.Select(category => category.ID)];
+    }
+
     public async Task<int> UpdateCategoryAsync(
         long id,
         CategoryEntity category
@@ -54,10 +73,7 @@ public class CategoryRepository(ApplicationDbContext context)
         await _context
             .Categories.Where(_category => _category.ID == id)
             .ExecuteUpdateAsync(setters =>
-                setters.SetProperty(
-                    _category => _category.Name,
-                    category.Name
-                )
+                setters.SetProperty(_category => _category.Name, category.Name)
             );
 
     public async Task<int> DeleteCategoryAsync(long id) =>

@@ -18,19 +18,24 @@ public static class Dependency
     )
     {
         builder.Services.AddDbContextPool<ApplicationDbContext>(options =>
+        {
             options.UseNpgsql(
                 builder.Configuration.GetConnectionString("PrimaryDatabase"),
                 poolOptions => poolOptions.EnableRetryOnFailure(3)
-            )
-        );
+            );
+            options.EnableSensitiveDataLogging();
+        });
         builder.Services.AddSerilog(options =>
             options.ReadFrom.Configuration(builder.Configuration)
         );
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+        builder.Services.AddScoped<Transaction>();
         builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
         builder.Services.AddScoped<IArticleService, ArticleService>();
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
-        builder.Services.AddScoped<InputValidationFilter<ArticleDto>>();
+        builder.Services.AddScoped<
+            InputValidationFilter<ArticleCreateRequest>
+        >();
     }
 }

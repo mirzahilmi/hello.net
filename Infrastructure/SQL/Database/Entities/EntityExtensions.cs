@@ -51,8 +51,30 @@ public static class EntityExtensions
             PublishedAt = article.PublishedAt,
         };
 
+    public static ArticleResourceResponse ToArticleResponse(
+        this ArticleCreateRequest article,
+        long id
+    ) =>
+        new()
+        {
+            ID = id,
+            Title = article.Title,
+            Slug = article.Slug,
+            Content = article.Content,
+            PublishedAt = article.PublishedAt,
+        };
+
+    public static ArticleEntity ToArticleEntity(this ArticleDto article) =>
+        new()
+        {
+            Title = article.Title,
+            Slug = article.Slug,
+            Content = article.Content,
+            PublishedAt = article.PublishedAt,
+        };
+
     public static ArticleEntity ToArticleEntity(
-        this ArticleDto article
+        this ArticleCreateRequest article
     ) =>
         new()
         {
@@ -60,5 +82,8 @@ public static class EntityExtensions
             Slug = article.Slug,
             Content = article.Content,
             PublishedAt = article.PublishedAt,
+            Categories = article.Categories.ConvertAll(category =>
+                category.ToCategoryEntity()
+            ),
         };
 }

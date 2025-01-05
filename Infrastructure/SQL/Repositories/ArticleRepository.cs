@@ -9,12 +9,10 @@ using Npgsql;
 namespace Hello.NET.Infrastructure.SQL.Repositories;
 
 public class ArticleRepository(
-    ApplicationDbContext context,
-    ILogger<ArticleRepository> logger
+    ApplicationDbContext context
 ) : IArticleRepository
 {
     private readonly ApplicationDbContext _context = context;
-    private readonly ILogger<ArticleRepository> _logger = logger;
 
     public async Task<ArticleEntity?> GetArticleAsync(long id) =>
         await _context
@@ -30,7 +28,7 @@ public class ArticleRepository(
             .Take(paging.PageSize)
             .ToListAsync();
 
-    public async Task<long> CreateArticleAsync(ArticleEntity article)
+    public async Task<ArticleEntity> CreateArticleAsync(ArticleEntity article)
     {
         await _context.Articles.AddAsync(article);
         try
@@ -44,7 +42,7 @@ public class ArticleRepository(
         {
             throw new DataConflictException("Slug already exists");
         }
-        return article.ID;
+        return article;
     }
 
     public async Task<bool> CheckArticleAsync(long id) =>

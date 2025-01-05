@@ -9,6 +9,7 @@ public interface ICategoryRepository
     Task<CategoryEntity?> GetCategoryAsync(long id);
     Task<bool> CheckCategoryAsync(long id);
     Task<long> CreateCategoryAsync(CategoryEntity category);
+    Task<List<long>> CreateCategoriesAsync(List<CategoryEntity> categories);
     Task<int> UpdateCategoryAsync(long id, CategoryEntity category);
     Task<int> DeleteCategoryAsync(long id);
 }

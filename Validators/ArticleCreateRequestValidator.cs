@@ -3,9 +3,10 @@ using Hello.NET.Domain.DTOs;
 
 namespace Hello.NET.Validators;
 
-public class ArticleDtoValidator : AbstractValidator<ArticleDto>
+public class ArticleCreateRequestValidator
+    : AbstractValidator<ArticleCreateRequest>
 {
-    public ArticleDtoValidator()
+    public ArticleCreateRequestValidator()
     {
         RuleFor(article => article.Title)
             .NotEmpty()
@@ -21,6 +22,10 @@ public class ArticleDtoValidator : AbstractValidator<ArticleDto>
         RuleFor(article => article.PublishedAt)
             .NotEmpty()
             .WithMessage("{PropertyName} is required");
+        RuleForEach(article => article.Categories)
+            .ChildRules(category =>
+            {
+                category.RuleFor(category => category.Name).NotEmpty();
+            });
     }
 }
-
