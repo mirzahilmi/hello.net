@@ -3,7 +3,7 @@ using Hello.NET.Domain.DTOs;
 
 namespace Hello.NET.Validators;
 
-public class ArticleCreateRequestValidator
+public sealed class ArticleCreateRequestValidator
     : AbstractValidator<ArticleCreateRequest>
 {
     public ArticleCreateRequestValidator()

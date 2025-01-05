@@ -8,7 +8,7 @@ using Npgsql;
 
 namespace Hello.NET.Infrastructure.SQL.Repositories;
 
-public class ArticleRepository(
+public sealed class ArticleRepository(
     ApplicationDbContext context
 ) : IArticleRepository
 {

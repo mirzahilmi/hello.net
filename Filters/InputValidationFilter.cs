@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Hello.NET.Filters;
 
-public class InputValidationFilter<T>(IValidator<T> validator)
+public sealed class InputValidationFilter<T>(IValidator<T> validator)
     : IAsyncActionFilter
 {
     private readonly IValidator<T> _validator = validator;

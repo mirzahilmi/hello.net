@@ -6,7 +6,7 @@ using Hello.NET.Infrastructure.SQL.Database.Entities;
 
 namespace Hello.NET.Usecase.Services;
 
-public class ArticleService(
+public sealed class ArticleService(
     IArticleRepository repository,
     Transaction transaction
 ) : IArticleService

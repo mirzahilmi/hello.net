@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hello.NET.ExceptionHandlers;
 
-public class DefaultExceptionHandler : IExceptionHandler
+public sealed class DefaultExceptionHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Options;
 
 namespace Hello.NET.Options;
 
-public class OpenTelemetryOptionsSetup(IConfiguration configuration)
+public sealed class OpenTelemetryOptionsSetup(IConfiguration configuration)
     : IConfigureOptions<OpenTelemetryOptions>
 {
     public const string SectionName = "OpenTelemetry";

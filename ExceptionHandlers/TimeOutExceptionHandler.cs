@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hello.NET.ExceptionHandlers;
 
-public class TimeOutExceptionHandler : IExceptionHandler
+public sealed class TimeOutExceptionHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,

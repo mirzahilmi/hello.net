@@ -8,7 +8,8 @@ namespace Hello.NET.Controllers;
 [ApiVersion(1.0)]
 [ApiController]
 [Route("api/v{version:apiVersion}/categories")]
-public class CategoryController(ICategoryService service) : ControllerBase
+public sealed class CategoryController(ICategoryService service)
+    : ControllerBase
 {
     private readonly ICategoryService _service = service;
 

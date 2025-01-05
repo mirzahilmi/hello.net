@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 [ApiVersion(1.0)]
 [ApiController]
 [Route("api/v{version:apiVersion}/articles")]
-public class ArticleController(
+public sealed class ArticleController(
     IArticleService service,
     ILogger<ArticleController> logger
 ) : ControllerBase

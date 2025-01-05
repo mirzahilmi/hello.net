@@ -8,7 +8,7 @@ using Npgsql;
 
 namespace Hello.NET.Infrastructure.SQL.Repositories;
 
-public class CategoryRepository(ApplicationDbContext context)
+public sealed class CategoryRepository(ApplicationDbContext context)
     : ICategoryRepository
 {
     private readonly ApplicationDbContext _context = context;
