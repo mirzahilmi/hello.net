@@ -97,6 +97,10 @@ public static class Extensions
         builder.Services.AddSerilog(options =>
             options.ReadFrom.Configuration(builder.Configuration)
         );
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = builder.Configuration.GetConnectionString("CacheStorage");
+        });
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         builder.Services.AddScoped<Transaction>();
         builder.Services.AddScoped<IArticleRepository, ArticleRepository>();

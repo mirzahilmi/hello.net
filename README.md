@@ -14,7 +14,7 @@ scenario, but rather to getting my hand dirty with .NET ecosystem nitty-gritty.
 - [x] Instrumentation through logging
 - [x] Demonstrate N+1 problem solution
 - [x] Demonstrate ACID
-- [ ] Implement server side caching with Redis
+- [x] Implement server side caching with Redis
 - [ ] Implement full-text search with ElasticSearch
 - [ ] Implement unit & load testing
 

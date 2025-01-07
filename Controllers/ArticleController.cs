@@ -102,7 +102,6 @@ public sealed class ArticleController(
     }
 
     [HttpPut("{id}")]
-    [ServiceFilter<InputValidationFilter<ArticleCreateRequest>>]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> PutArticle(
