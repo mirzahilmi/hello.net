@@ -27,5 +27,4 @@ dotnet run
 ```
 
 ## System Design
-...
-
+![System Design](./img/system_design.drawio.png)
