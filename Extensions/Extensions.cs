@@ -3,6 +3,7 @@ namespace Hello.NET.Extensions;
 using System.Net;
 using System.Threading.RateLimiting;
 using Asp.Versioning;
+using Elastic.Clients.Elasticsearch;
 using FluentValidation;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Repositories;
@@ -99,10 +100,13 @@ public static class Extensions
         );
         builder.Services.AddStackExchangeRedisCache(options =>
         {
-            options.Configuration = builder.Configuration.GetConnectionString("CacheStorage");
+            options.Configuration = builder.Configuration.GetConnectionString(
+                "CacheStorage"
+            );
         });
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         builder.Services.AddScoped<Transaction>();
+        builder.Services.AddScoped(_ => new ElasticsearchClient());
         builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
         builder.Services.AddScoped<IArticleService, ArticleService>();
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

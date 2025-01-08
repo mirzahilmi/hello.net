@@ -17,7 +17,8 @@ public sealed class ArticleService(
     public IArticleRepository _repository = repository;
 
     public async Task<List<ArticleResourceResponse>> RetrieveArticlesAsync(
-        PagingDto paging
+        PagingDto paging,
+        ArticleSearchQuery? query
     )
     {
         var cached = await cache.GetStringAsync("articles");
@@ -29,7 +30,11 @@ public sealed class ArticleService(
             return cachedArticles ?? [];
         }
 
-        var result = await _repository.GetArticlesAsync(paging);
+        List<ArticleEntity> result;
+        if (query != null)
+            result = await _repository.GetArticlesAsync(query);
+        else
+            result = await _repository.GetArticlesAsync(paging);
 
         var articles = result.ConvertAll(article =>
             article.ToArticleResponse(article.ID)

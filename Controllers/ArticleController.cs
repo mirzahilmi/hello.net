@@ -21,14 +21,17 @@ public sealed class ArticleController(
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<
         ActionResult<IEnumerable<ArticleResourceResponse>>
-    > GetArticles([FromQuery] PagingDto paging)
+    > GetArticles(
+        [FromQuery] PagingDto paging,
+        [FromQuery] ArticleSearchQuery? query
+    )
     {
         _logger.LogDebug(
             "Getting article with page index of {pageIndex} and page size of {pageSize}",
             paging.PageIndex,
             paging.PageSize
         );
-        var articles = await _service.RetrieveArticlesAsync(paging);
+        var articles = await _service.RetrieveArticlesAsync(paging, query);
         _logger.LogInformation(
             "Received {count} articles from the query",
             articles.Count
@@ -40,7 +43,8 @@ public sealed class ArticleController(
     [HttpGet("stream")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async IAsyncEnumerable<ArticleResourceResponse> GetArticlesStream(
-        [FromQuery] PagingDto paging
+        [FromQuery] PagingDto paging,
+        [FromQuery] ArticleSearchQuery? query
     )
     {
         _logger.LogDebug(
@@ -48,7 +52,7 @@ public sealed class ArticleController(
             paging.PageIndex,
             paging.PageSize
         );
-        var articles = await _service.RetrieveArticlesAsync(paging);
+        var articles = await _service.RetrieveArticlesAsync(paging, query);
         _logger.LogInformation(
             "Received {count} articles from the query",
             articles.Count

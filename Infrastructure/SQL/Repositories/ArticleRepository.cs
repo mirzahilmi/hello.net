@@ -1,3 +1,5 @@
+using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.QueryDsl;
 using Hello.NET.Domain.DTOs;
 using Hello.NET.Domain.Repositories;
 using Hello.NET.Exceptions;
@@ -9,7 +11,8 @@ using Npgsql;
 namespace Hello.NET.Infrastructure.SQL.Repositories;
 
 public sealed class ArticleRepository(
-    ApplicationDbContext context
+    ApplicationDbContext context,
+    ElasticsearchClient elasticClient
 ) : IArticleRepository
 {
     private readonly ApplicationDbContext _context = context;
@@ -27,6 +30,23 @@ public sealed class ArticleRepository(
             .Skip((paging.PageIndex - 1) * paging.PageSize)
             .Take(paging.PageSize)
             .ToListAsync();
+
+    public async Task<List<ArticleEntity>> GetArticlesAsync(
+        ArticleSearchQuery query
+    )
+    {
+        var request = new SearchRequest("articles")
+        {
+            Query = new MatchQuery(new Field("content"))
+            {
+                Query = query.Query,
+            },
+        };
+        var response = await elasticClient.SearchAsync<ArticleEntity>(request);
+        if (!response.IsValidResponse)
+            return [];
+        return response.Documents.ToList();
+    }
 
     public async Task<ArticleEntity> CreateArticleAsync(ArticleEntity article)
     {
