@@ -1,8 +1,14 @@
 # Hello .NET
+> [!NOTE]
+> There is maybe some or much of unusual code that i written here, it is
+> intentional as it is my very first time i write C#. The goals are to improve it
+> time by time i keep exposing myself with C# ecosystem. Feel free to
+> review my code and submit any issue for suggestions 😉
 
 ## Goals
 The goals of this project is not really trying to solve a real-world problem
 scenario, but rather to getting my hand dirty with .NET ecosystem nitty-gritty.
+Below are goals that i set to achieve while building this project:
 
 - [x] Learn about ASP.NET
 - [x] Understand dependency injection in ASP.NET
