@@ -12,9 +12,9 @@ Below are goals that i set to achieve while building this project:
 
 - [x] Learn about ASP.NET
 - [x] Understand dependency injection in ASP.NET
-- [x] Clean Architecture in ASP.NET
 - [x] Use ASP.NET Swagger Generator => I changed it to use Scalar instead
 - [x] API Versioning
+- [x] Implement Clean Architecture
 - [x] Explore about Options Pattern
 - [x] Implement Rate Limiting
 - [x] Instrumentation through logging
